@@ -1,0 +1,29 @@
+{% comment %}
+  @isLazyLoad [boolean]
+  @link [url]
+  @media [image file]
+
+  render 'promotional-banner', media: media, link: url, isLazyLoad: isLazyLoad
+{% endcomment %}
+
+<div
+  class="collection-promotional before {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+  {% if settings.animations_reveal_on_scroll %}
+    data-cascade
+    style="--animation-order: {{ forloop.index }};"
+  {% endif %}
+>
+  {% unless media == blank %}
+    <a href="{{ link }}" aria-label="Read more about {{ product.title }}">
+      {% if isLazyLoad %}
+        {{ media | image_url: width: 700 | image_tag: loading: 'lazy' }}
+      {% else %}
+        {{ media | image_url: width: 700 | image_tag }}
+      {% endif %}
+    </a>
+  {% else %}
+    <a href="{{ link }}" aria-label="Read more about {{ product.title }}">
+      {{ 'collection-4' | placeholder_svg_tag }}
+    </a>
+  {% endunless %}
+</div>

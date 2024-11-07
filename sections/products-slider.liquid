@@ -1,0 +1,272 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+
+  @media(max-width: 768px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+
+  .wrapper-{{ id }}{
+    display: grid;
+    grid-template-columns: {{ section.settings.image_width }}fr 1fr;
+  }
+  .products-wrapper-{{ id }}{
+    background: rgba(234, 9, 75, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 70px;
+    width: 100%;
+    overflow: hidden;
+  }
+  .img-wrapper-{{ id }}{
+    font-size: 0;
+    line-height: 0;
+  }
+  .img-wrapper-{{ id }} img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .products-wrapper-{{ id }} #pagination--{{ section.id }}{
+    position: static;
+  }
+  .products-wrapper-{{ id }} .swiper-pagination .swiper-pagination-bullet{
+    width: 5px;
+    height: 5px;
+    transition: all 0.3s linear;
+  }
+  .products-wrapper-{{ id }} .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active{
+    width: 20px;
+    height: 5px;
+    border-radius: 6px;
+    transition: all 0.3s linear;
+  }
+  .products-wrapper-{{ id }} .new-product-media{
+    background: #fff;
+  }
+  @media screen and (max-width: 768px){
+   .wrapper-{{ id }}{
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+    }
+    .img-wrapper-{{ id }}{
+      grid-row: 1/2;
+    }
+    .products-wrapper-{{ id }}{
+      grid-row: 2/-1;
+      padding: 30px 15px;
+    }
+  }
+</style>
+
+{{ 'new-product-card.css' | asset_url | stylesheet_tag }}
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <div class="products-wrapper-{{ id }}">
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            {% for product in section.settings.product_list %}
+              <div class="swiper-slide">
+                {% liquid
+                  assign showReview = true
+                  assign isLazyLoad = true
+                  render 'new-product-card', product: product, isLazyLoad: isLazyLoad, showReview: showReview
+                %}
+              </div>
+            {% endfor %}
+          </div>
+          <div id="pagination--{{ section.id }}" class="swiper-pagination"></div>
+        </div>
+      </div>
+      <div class="img-wrapper-{{ id }}">
+        {% liquid
+          assign lg_image = section.settings.image
+          assign sm_image = section.settings.image_m
+          if sm_image == blank
+            assign sm_image = lg_image
+          endif
+        %}
+        <picture>
+          <source media="(min-width:769px)" srcset="{{ lg_image | image_url: width: lg_image.width }}">
+          {{ sm_image | image_url: width: sm_image.width | image_tag: loading: 'lazy' }}
+        </picture>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    new Swiper(".products-wrapper-{{ id }} .swiper", {
+      slidesPerView: 1,
+      speed: 1000,
+      pagination: {
+        el: "#pagination--{{ section.id }}",
+        clickable: true,
+      }
+    })
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Products Slider",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+      "type": "product_list",
+      "id": "product_list",
+      "label": "Products",
+      "limit": 12
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Select Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_m",
+      "label": "Select Image(Mobile)"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 0,
+      "max": 2,
+      "step": 0.1,
+      "unit": "fr",
+      "label": "Image Width Desktop",
+      "default": 0.7
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Products Slider"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,344 @@
+{% liquid
+  assign image = product.metafields.custom.benefit_image
+%}
+
+<style>
+  .iwpi-sec{
+    max-width: 100vw;
+    overflow: hidden;
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    @media(max-width: 768px) {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+  .iwpi-wrapper{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0px;
+  }
+  .iwpi-bottom{
+    font-size: 0;
+    line-height: 0;
+  }
+  .iwpi-item img{
+    width: 100%;
+    height: 100%;
+    max-height: 673px;
+    object-fit: cover;
+  }
+  .info-item-benefit .first{
+    color: #000;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0 0 10px 0;
+    position: relative;
+  }
+  .info-item-benefit .last{
+    color: #000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0 0 0 0;
+    max-width: 170px;
+  }
+  .info-header-x{
+    align-self: end;
+    color: #000;
+    /* text-align: center; */
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: capitalize;
+    margin: 0 0 0 0;
+  }
+  .info-header-x,
+  .info-footer-x{
+    /* color: #000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal; */
+    /* margin: 0 0 0 0; */
+  }
+  .iwpi-item.iwpi-top {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 65px 1fr 65px;
+    box-sizing: border-box;
+    justify-self: center;
+    /* padding-left: 20%; */
+  }
+  .info-benefits {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    padding-left: 15%;
+    gap: 72px;
+  }
+  .info-item-benefit {
+    position: relative;
+  }
+  .info-item-benefit .first:before{
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: -45px;
+    z-index: 5;
+    width: 17px;
+    height: 17px;
+    background-color: var(--color-background);
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border-radius: 50%;
+    -webkit-transition:  1.3s;
+    transition: 1.3s;
+  }
+  .info-item-benefit.visible .first:before{
+    transition: 1.3s;
+    background: #EA094B;
+  }
+
+  .info-item-benefit:not(:last-child):before{
+    position: absolute;
+    content: "";
+    left: -36px;
+    top: 29px;
+    height: calc(100% + 53px);
+    width: 2px;
+    background: #F5D8CC;;
+    z-index: 3;
+    opacity: .2;
+  }
+
+  .info-item-benefit:not(:last-child):after{
+    position: absolute;
+    content: "";
+    left: -37px;
+    top: 27px;
+    height: 0px;
+    width: 2px;
+    background: #EA094B;;
+    z-index: 3;
+    opacity: 1;
+    transition: 1.3s;
+  }
+  .info-item-benefit.visible:not(:last-child):after{
+    height: calc(100% + 55px);
+  }
+
+  @media(max-width: 768px) {
+    .iwpi-wrapper {
+      grid-template-columns: 1fr;
+      /* grid-auto-rows: 1fr; */
+      gap: 24px;
+    }
+    .iwpi-item.iwpi-top {
+      grid-row: 2/3;
+      padding-left: 6%;
+      grid-template-rows: 45px 1fr 45px;
+      margin-top: 20px;
+    }
+    .iwpi-item img {
+      height: auto;
+      max-height: 100%;
+      object-fit: cover;
+    }
+    .info-header-x {
+      align-self: start;
+    }
+    .info-footer-x {
+      align-self: end;
+    }
+    .info-benefits {
+      gap: 45px;
+      padding-left: 21%;
+    }
+    .info-item-benefit .first {
+      font-size: 30px;
+      margin: 0 0 8px 0;
+    }
+    .info-item-benefit .last {
+      font-size: 12px;
+    }
+    .info-item-benefit:not(:last-child):before {
+      height: calc(100% + 26px);
+    }
+    .info-item-benefit.visible:not(:last-child):after{
+      height: calc(100% + 26px);
+    }
+    .info-header-x{
+      font-size: 24px;
+      letter-spacing: 0px;
+      line-height: 1.2;
+    }
+    .info-footer-x{
+      font-size: 12px;
+    }
+  }
+</style>
+
+{% unless image == blank %}
+  <div class="iwpi-sec">
+    <div class="page-width">
+      <div class="iwpi-wrapper">
+        <div class="iwpi-item iwpi-top">
+          <p class="info-header-x">{{ section.settings.title | escape }}</p>
+          <div class="info-benefits">
+            {% for info in product.metafields.custom.benefits_of_use.value %}
+              {% assign infos = info | split: '=' %}
+              <div class="info-item-benefit">
+                <p class="first">{{ infos | first }}</p>
+                <p class="last">{{ infos | last }}</p>
+              </div>
+            {% endfor %}
+          </div>
+          <p class="info-footer-x">*Self assessment on 32 subjects during 4 weeks</p>
+        </div>
+        <div class="iwpi-item iwpi-bottom">
+          {{ image | image_url: width: image.width, crop: 'center' | image_tag }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endunless %}
+
+<script>
+  let observerBenefit = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      } else {
+        entry.target.classList.remove('visible');
+      }
+    });
+  }, {
+    rootMargin: "-130px",
+  });
+
+  let benefitItem = document.querySelectorAll('.info-item-benefit');
+  benefitItem.forEach(item => {
+    observerBenefit.observe(item);
+  })
+</script>
+
+{% schema %}
+{
+  "name": "Product Benefits Info",
+  "templates": ["product"],
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Benefits Of Use"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Product Benefits Info"
+    }
+  ]
+}
+{% endschema %}

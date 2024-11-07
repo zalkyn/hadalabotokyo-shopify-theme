@@ -1,0 +1,304 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+
+  @media(max-width: 768px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+  .wrapper-{{ id }}{
+    display: grid;
+    grid-template-columns: {{ section.settings.image_width }}fr 1.53fr;
+  }
+  .image__container--{{ id }}{
+    font-size: 0;
+    line-height: 0;
+  }
+  .image__container--{{ id }} img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .text__container--{{ id }}{
+    background: rgba(234, 9, 75, 0.05);
+    display: flex;
+    align-items: center;
+    padding: 100px;
+  }
+  .text__wrapper--{{ id }} h2{
+    color: #000;
+    font-size: 32px;
+    line-height: normal;
+    margin: 0 0 12px;
+  }
+  .text__wrapper--{{ id }} p{
+    color: #000;
+    font-size: 16px;
+    line-height: normal;
+    margin: 0 0 17px;
+  }
+  .text__wrapper--{{ id }} li{
+    color: #000;
+    font-size: 16px;
+    line-height: normal;
+    margin: 0 0 17px;
+  }
+  .text__wrapper--{{ id }} a{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #FFF;
+    text-align: center;
+    font-size: 14px;
+    line-height: normal;
+    text-decoration: none;
+    background: #EA094B;
+    padding: 10px 28px;
+    /* max-width: 320px; */
+    max-width: max-content;
+    gap: 7px;
+  }
+
+  @media screen and (max-width: 768px){
+    .wrapper-{{ id }}{
+      grid-template-columns: 1fr;
+    }
+   .text__container--{{ id }}{
+      padding: 30px 15px;
+    }
+    .text__wrapper--{{ id }} h2{
+      font-size: 16px;
+      margin: 0 0 16px;
+      br {
+        display: none;
+      }
+    }
+    .text__wrapper--{{ id }} p{
+      font-size: 14px;
+      margin: 0 0 16px;
+    }
+    .text__wrapper--{{ id }} li{
+      font-size: 14px;
+      margin: 0 0 16px;
+    }
+    .text__wrapper--{{ id }} a{
+      font-size: 14px;
+      padding: 10px 16px;
+      max-width: 100%;
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      {% capture text %}<div class="text__container--{{ id }}">
+        <div class="text__wrapper--{{ id }}">
+          {% if section.settings.title != blank %}
+            <h2>{{ section.settings.title }}</h2>
+          {% endif %}
+          {% if section.settings.text != blank %}
+            <p>{{ section.settings.text }}</p>
+          {% endif %}
+          {% if section.settings.btn_text != blank %}
+            <a href="{{ section.settings.link | default: '#' }}">
+              {{- section.settings.btn_text -}}
+              {%- render 'gelico-icons', name: 'button-arrow' -%}
+            </a>
+          {% endif %}
+        </div>
+      </div>{% endcapture %}
+      {% if section.settings.image_position == 'right' %}{{ text }}{% endif %}
+      <div class="image__container--{{ id }}">
+        {% liquid
+          assign lg_image = section.settings.image
+          assign sm_image = section.settings.image_m
+          if sm_image == blank
+            assign sm_image = lg_image
+          endif
+        %}
+        <picture>
+          <source media="(min-width:769px)" srcset="{{ lg_image | image_url: width: lg_image.width }}">
+          {{ sm_image | image_url: width: sm_image.width | image_tag: loading: 'lazy' }}
+        </picture>
+      </div>
+      {% if section.settings.image_position == 'left' %}{{ text }}{% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Texts With Image",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Select Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_m",
+      "label": "Select Image(Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 0,
+      "max": 2,
+      "step": 0.1,
+      "unit": "fr",
+      "label": "Image Width Desktop",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Texts With Image"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,259 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+
+  @media(max-width: 768px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+  .featured__collection-headers{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 32px;
+  }
+  .collection__header-item{
+    color: #000;
+    font-size: 28px;
+    line-height: normal;
+    padding: 8px 40px;
+  }
+
+
+  .collection__header-item {
+    cursor: pointer;
+  }
+  .collection__header-item.selected {
+    background: #EA094B;
+    color: #FFF;
+  }
+  .featured__collection {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .featured__collection.active {
+    display: block;
+    opacity: 1;
+  }
+
+  @media screen and (max-width: 768px){
+    .collection__header-item{
+      font-size: 21px;
+      padding: 6px 30px;
+    }
+  }
+</style>
+
+{{ 'new-product-card.css' | asset_url | stylesheet_tag }}
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    {% if section.blocks.size > 0 %}
+      <div class="featured__collection-headers">
+        {% for block in section.blocks %}
+          <div data-item="{{ block.settings.collection.handle }}" class="collection__header-item">
+            {% if block.settings.title != blank %}
+              {{ block.settings.title }}
+            {% else %}
+              {{ block.settings.collection.title }}
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div class="featured__collections">
+      {% for block in section.blocks %}
+        <div data-item="{{ block.settings.collection.handle }}" class="featured__collection">
+          <div class="featured__collection-wrapper new-product-grid">
+            {% for product in block.settings.collection.products limit: 4 %}
+              {% liquid
+                assign showReview = true
+                assign isLazyLoad = true
+                assign showBadge = true
+                render 'new-product-card', product: product, isLazyLoad: isLazyLoad, showReview: showReview, showBadge: showBadge
+              %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const headerItems = document.querySelectorAll('.sec-{{ id }} .collection__header-item');
+    const collections = document.querySelectorAll('.sec-{{ id }} .featured__collection');
+
+    collections[0].classList.add('active');
+
+    headerItems.forEach((item, index) => {
+      item.addEventListener('click', function() {
+        const target = this.dataset.item;
+
+        headerItems.forEach(item => {
+          item.classList.remove('selected');
+        });
+
+        if(headerItems.length > 1){
+          this.classList.add('selected');
+        }
+
+        collections.forEach(collection => {
+          if (collection.dataset.item === target) {
+            collection.classList.add('active');
+            setTimeout(() => {
+              collection.style.opacity = 1;
+            }, 10);
+          } else {
+            collection.classList.remove('active');
+            collection.style.opacity = 0;
+          }
+        });
+      });
+      if (index === 0 && headerItems.length > 1) {
+        item.classList.add('selected');
+      }
+
+    });
+  });
+</script>
+{% schema %}
+{
+  "name": "Featured Collection 1",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "Collection",
+      "name": "collection",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection 1"
+    }
+  ]
+}
+{% endschema %}

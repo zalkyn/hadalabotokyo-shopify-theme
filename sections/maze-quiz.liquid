@@ -1,0 +1,251 @@
+<style>
+    .section-container--{{ section.id }}{
+      margin-top: {{ section.settings.margin_top | append:'px' }};
+      margin-bottom: {{ section.settings.margin_bottom | append:'px' }};
+      padding-top: {{ section.settings.padding_top | append:'px' }};
+      padding-bottom: {{ section.settings.padding_bottom | append:'px' }};
+      overflow: hidden;
+    }
+
+
+    @media screen and (max-width: 768px){
+      .section-container--{{ section.id }}{
+        margin-top: {{ section.settings.margin_top_mobile | append:'px' }};
+        margin-bottom: {{ section.settings.margin_bottom_mobile | append:'px'  }};
+        padding-top: {{ section.settings.padding_top_mobile | append:'px' }};
+        padding-bottom: {{ section.settings.padding_bottom_mobile | append:'px' }};
+      }
+
+    }
+  .section-wrapper--{{ section.id }}{
+    .quizes-wrapper{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      @media(max-width:768px){
+        grid-template-columns: 1fr ;
+        gap: 20px;
+      }
+    }
+    .single-quiz-card{
+          position: relative;
+          min-height: 400px;
+          overflow: hidden;
+         @media(max-width:768px){
+          min-height: 300px;
+        }
+    }
+    .single-quiz-card:hover{
+        img.card--image {
+          scale: 1.1;
+        }
+    }
+
+      img.card--image {
+        position: absolute;
+        object-fit: cover;
+        object-position: center right;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        transition: .5s ease;
+         @media(max-width: 768px){
+          position: unset;
+          height: auto;
+          aspect-ratio: 1;
+         }
+      }
+    .content-wrapper {
+      padding: 30px;
+       @media(max-width: 768px){
+          padding: 20px 0;
+       }
+      h1 {
+        margin-block: 0px 15px;
+        @media(max-width: 768px){
+          font-size: 18px;
+        }
+      }
+      a {
+          text-decoration: none;
+          color: #fff;
+          background: #000;
+          padding: 10px 15px;
+          display: flex;
+          gap: 30px;
+          align-items: center;
+          max-width: max-content;
+          svg {
+              width: 20px;
+              height: 20px;
+          }
+        
+      }
+    }
+  }
+</style>
+<section class="section-container--{{ section.id }}">
+  <div class="section-wrapper--{{ section.id }} page-width">
+    <div class="quizes-wrapper">
+      {% for card in section.blocks %}
+        <div class="single-quiz-card">
+          <div class="image-wrapper"></div>
+          {{ card.settings.image | image_url: width: card.settings.image.width | image_tag: class: 'card--image' }}
+          <div class="content-wrapper">
+            <h1>{{ card.settings.title }}</h1>
+            <a href="{{ card.settings.button_url }}">
+              {{ card.settings.button_label }}
+              <svg
+                fill="#fff"
+                xmlns="http://www.w3.org/2000/svg"
+                width="40px"
+                height="40px"
+                viewBox="0 0 52 52"
+                enable-background="new 0 0 52 52"
+                xml:space="preserve"
+              >
+                <g>
+                	<path d="M17.9,4.4l20.7,20.5c0.6,0.6,0.6,1.6,0,2.2L17.9,47.6c-0.6,0.6-1.6,0.6-2.2,0l-2.2-2.2
+                		c-0.6-0.6-0.6-1.6,0-2.2l16.3-16.1c0.6-0.6,0.6-1.6,0-2.2L13.6,8.8c-0.6-0.6-0.6-1.6,0-2.2l2.2-2.2C16.4,3.9,17.3,3.9,17.9,4.4z"/>
+                </g>
+              </svg>
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maze Quiz",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Desktop Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Mobile Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top  (Mobile)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom  (Mobile)",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Quiz",
+      "type": "quiz",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Start the quiz"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button Url"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Maze Quiz"
+    }
+  ]
+}
+{% endschema %}

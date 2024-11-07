@@ -1,0 +1,226 @@
+<style>
+  .hs1-mbl-header-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: 8px;
+  }
+  .hs1-mbl-left{
+    font-size: 0;
+    line-height: 0;
+  }
+  .hs1-mbl-left button{
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+  }
+  .hs1-mbl-logo-section{
+    display: inline-block;
+    font-size: 0;
+    line-height: 0;
+  }
+  .hs1-mbl-logo-section img{
+    max-width: {{ section.settings.logo_width_desktop }}px;
+    height: auto;
+  }
+  .hs1-mbl-icons-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .hs1-mbl-icons-section a{
+    display: inline-block;
+    font-size: 0;
+    line-height: 0;
+  }
+
+  .mobile-drawer{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 999;
+    background: #fff;
+    transform: translate(-100%);
+    visibility: hidden;
+    transition-property: transform,visibility;
+    transition-duration: 0.5s;
+    transition-timing-function: ease;
+  }
+  [drawer-opened] .mobile-drawer{
+    transform: translate(0);
+    visibility: visible;
+  }
+  .mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #EA094B;
+    padding-block: 1rem;
+  }
+  .mobile-drawer-header > div{
+    font-size: 0;
+    line-height: 0;
+  }
+
+
+  /* Mobile drawer menu */
+  .menu-drawer__navigation-custom ul {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+  }
+
+  ul.parent-m li a {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 22px;
+      text-decoration: none;
+      text-transform: uppercase;
+      color: #000000;
+      display: inline-block;
+  }
+
+  .expand-icon-container {
+      display: inline-block;
+  }
+
+  .has-sub-menu,
+  .has-double-sub-menu {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+
+  .expand-icon-container-wrapper {
+      display: flex;
+      align-items: center;
+      position: relative;
+  }
+
+  .parent-m ul,
+  .child-m ul,
+  .grandchild-m ul {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.5s ease-in-out;
+  }
+
+  .open > ul {
+      max-height: 2000px !important; /* Adjust as needed */
+  }
+  .expand-icon-container-wrapper .plus-icon{
+    transition: all 0.5s ease-in-out;
+  }
+  .expand-icon-container-wrapper .minus-icon{
+     display: none;
+    transition: all 0.5s ease-in-out;
+  }
+  .open > div > .expand-icon-container > .expand-icon-container-wrapper > .plus-icon {
+      transform: rotate(180deg);
+      display: none;
+  }
+
+  .open > div > .expand-icon-container > .expand-icon-container-wrapper > .minus-icon {
+      display:block;
+  }
+  ul.child-m, ul.grandchild-m{
+    margin-left: 14px;
+  }
+  li.open{
+    /* padding-bottom: 0 !important;
+    border-bottom: none !important; */
+  }
+  .menu-drawer__menu  li{
+    padding: 14px 0;
+  }
+  .menu-drawer__menu  li:not(:last-child){
+    border-bottom: 1px solid #D0D0D0;
+  }
+  .menu-drawer__menu  li:last-child{
+    padding-block-end: 0;
+  }
+
+   /* Mobile drawer menu */
+
+  .mobile-drawer-icons{
+    margin: 30px 0 0;
+  }
+  .drawer-icons-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .drawer-icons-top a{
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .drawer-icons-top a span{
+    color: #000;
+    font-size: 13px;
+    line-height: normal;
+  }
+  .drawer-icons-bottom{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 25px 0 0;
+  }
+  .drawer-icons-bottom a{
+    display: inline-block;
+    font-size: 0;
+    line-height: 0;
+  }
+</style>
+
+<div class="hs1-mbl-header-wrapper page-width">
+  <div class="hs1-mbl-left">
+    <button drawer-opener title="hamburger" aria-label="hamburger-icon">
+      {% render 'gelico-icons', name: 'breadcumb' %}
+    </button>
+    {% render 'hs1-drawer-menu', section: section %}
+  </div>
+  <a href="/" class="hs1-mbl-logo-section" aria-label="logo">
+    {% liquid
+      assign logo_desktop = section.settings.logo_desktop
+      assign logo_mobile = section.settings.logo_mobile
+      if logo_mobile == blank
+        assign logo_mobile = logo_desktop
+      endif
+    %}
+    {% unless logo_desktop == blank %}
+      <picture>
+        <source media="(min-width:650px)" srcset="{{ logo_desktop | image_url: width: logo_desktop.width }}">
+        {{ logo_mobile | image_url: width: logo_mobile.width | image_tag: loading: 'lazy' }}
+      </picture>
+    {% else %}
+      <h2 class="hs1-shop-name">{{ section.settings.shop_name }}</h2>
+    {% endunless %}
+  </a>
+  <div class="hs1-mbl-icons-section">
+    {% unless section.settings.search_icon == blank %}
+      <a href="#" aria-label="search-icon">
+        {{ section.settings.search_icon }}
+      </a>
+    {% else %}
+      <a href="#" aria-label="search-icon">
+        {% render 'gelico-icons', name: 'search' %}
+      </a>
+    {% endunless %}
+    {% unless section.settings.cart_icon == blank %}
+      <a class="new-header-cart-icon" href="/cart" aria-label="Cart Icon">
+        {{ section.settings.cart_icon }}
+      </a>
+    {% else %}
+      <a class="new-header-cart-icon" href="/cart" aria-label="Cart Icon">
+        {% render 'gelico-icons', name: 'cart' %}
+      </a>
+    {% endunless %}
+  </div>
+</div>

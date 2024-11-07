@@ -1,0 +1,66 @@
+{% comment %}
+  {% render 'collecton-group', section: section, collection: collection, collectionList: collectionList, id: id %}
+{% endcomment %}
+
+<div class="collection-list-{{ id }}" id="scrollContainer">
+  {% for block in collectionList %}
+    <a
+      class="list-item-{{ id }} {% if collection.handle == block.settings.collection.handle %}active{% endif %}"
+      href="{{ block.settings.collection.url }}"
+      data-index="{{ forloop.index0 }}"
+      aria-label="{{ collection.title }}"
+    >
+      {{- block.settings.collection.title -}}
+    </a>
+  {% endfor %}
+</div>
+
+<style>
+  .collection-list-{{ id }} {
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    grid-column-gap: 11px;
+  }
+  .list-item-{{ id }} {
+    height: 37px;
+    line-height: 37px;
+    display: block;
+    border: 1px solid #EA094B;
+    background-color: transparent;
+    box-sizing: border-box;
+    color: #000;
+    text-align: center;
+    font-size: 14px;
+    text-transform: capitalize;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .list-item-{{ id }}.active{
+    background-color: #EA094B;
+    color: #ffffff;
+  }
+
+  @media(max-width: 768px) {
+    .collection-list-{{ id }} {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 10px;
+      flex-direction: row;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .collection-list-{{ id }}::-webkit-scrollbar{
+      visibility: hidden;
+      display: none;
+    }
+    .list-item-{{ id }} {
+      min-width: 30%;
+    }
+  }
+
+  @media(max-width: 560px) {
+    .list-item-{{ id }} {
+      min-width: 40%;
+    }
+  }
+</style>

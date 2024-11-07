@@ -1,0 +1,118 @@
+.article__card{
+  position: relative;
+}
+.article__card > a{
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.article__card-media{
+  font-size: 0;
+  line-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+.article__card-media p{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 10px;
+  line-height: 1;
+  padding: 6px 8px;
+  background: #fff;
+  box-shadow: 0 .125rem .625rem #0000001a;
+  text-transform: uppercase;
+  color: #000;
+  margin: 0;
+}
+.article__card-media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  min-height: 320px;
+  max-height: 320px;
+  transform-origin: 50%;
+  transition: transform .5s;
+  transform: scale(1.05);
+}
+.article__card:hover .article__card-media img{
+  transform: scale(1);
+}
+.article__card-texts h2{
+  font-size: 20px;
+  line-height: 23px;
+  color: #000;
+  margin: 20px 0;
+}
+.article__card-texts p{
+  font-size: 14px;
+  line-height: 22px;
+  color: #000;
+  margin: 0 0 20px;
+}
+.article__card-texts a{
+  color: #000;
+  font-size: 14px;
+  line-height: normal;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+.article__card-texts a:after{
+  content: "";
+  z-index: 0;
+  transform-origin: 100% 0;
+  background-color: #333;
+  width: 100%;
+  height: 1px;
+  transition: transform .3s,-webkit-transform .3s;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+}
+.article__card:hover .article__card-texts a:after{
+  transform-origin: 0 0;
+  transform: scaleX(1);
+}
+.article__card-texts a svg{
+  width: 8px;
+  height: 12px;
+}
+.article__card-texts a svg path{
+  fill: #000;
+}
+
+@media screen and (max-width: 768px){
+
+  .article__card-media img{
+    min-height: 200px;
+    max-height: 200px;
+    transform: scale(1);
+    object-position: center right;
+  }
+  .article__card-texts h2{
+    font-size: 16px;
+    line-height: 20px;
+    margin: 12px 0;
+  }
+  .article__card-texts p{
+    font-size: 12px;
+    line-height: 18px;
+    color: #000;
+    margin: 0 0 12px;
+  }
+  .article__card-texts a{
+    font-size: 12px;
+    gap: 8px;
+  }
+  .article__card-texts a svg{
+    width: 6px;
+    height: 9px;
+  }
+}

@@ -1,0 +1,393 @@
+<style>
+    .row-container--{{ section.id }}{
+      padding-top : {{ section.settings.padding_top }}px;
+      padding-bottom : {{ section.settings.padding_bottom }}px;
+      margin-top: {{ section.settings.margin-top }}px;
+      margin-bottom: {{ section.settings.margin-bottom }}px;
+      overflow: hidden;
+    }
+    .row-container--{{ section.id }} .prodSwiper {
+      @media(max-width: 768px) {
+        overflow : visible;
+      }
+    }
+    .swiper-button-prev.parent-prev:after,.swiper-button-next.parent-next:after {
+      content: none!important;
+    }
+
+    .swiper-button-prev.child-prev:after, .swiper-button-next.child-next:after {
+      content: none!important;
+    }
+  .row-container--{{ section.id }} .slider-titles {
+         width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+    .row-container--{{ section.id }} .slider_title{
+        color: #000;
+        font-size: 28px;
+        line-height: 1;
+        text-transform: capitalize;
+        /* font-family: var(--font-body-family); */
+        /* font-family: hn500; */
+    }
+    .row-container--{{ section.id }} h2{
+        color: #000;
+        font-size: 50px;
+        line-height: 121.5%;
+        text-transform: uppercase;
+        text-align: left;
+        @media(max-width:768px){
+          font-size:32px;
+          line-height:36px;
+        }
+    }
+
+    .row-container--{{ section.id }} .featured_collection_slides {
+      text-align: center;
+      font-size: 16px;
+      background: red;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .row-container--{{ section.id }} .slider-title-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      /* width: max-content; */
+      margin: 10px auto;
+      text-align: center;
+      gap: 30px;
+    }
+    .row-container--{{ section.id }} .slider-title-wrapper  h3 {
+        margin: 0;
+    }
+    .row-container--{{ section.id }} .slider-title-wrapper a{
+      /* color : #000000; */
+      font-size : 16px;
+      font-weight : 500;
+      min-width: fit-content;
+    }
+    .row-container--{{ section.id }} .featured-collection-prev, .featured-collection-next{
+      cursor: pointer;
+    }
+    .row-container--{{ section.id }} .swiper-button-disabled{
+      opacity: 0.3;
+    }
+    .swiper-slide.parentSlide {
+      /* flex: 1; */
+      transition : .3s;
+      display : flex;
+      flex-direction: column;
+    }
+    .swiper-slide.parentSlide:hover {
+      /* transform: scale3d(1.05, 1.05, 1.05); */
+    }
+    .row-container--{{ section.id }} .feature-collection-pagination{
+      margin-top: 10px;
+      width: 100%;
+      max-width : 100%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 5px;
+      border-radius: 8px;
+      display:none;
+    }
+    .row-container--{{ section.id }} .feature-collection-pagination .swiper-pagination-bullet{
+      background-color: #1b0177;
+      width: 8px;
+      height: 6px;
+      margin: 0;
+      border-radius: 9999px;
+      transition-property: all;
+      transition-duration: .35s;
+    }
+    .row-container--{{ section.id }} .feature-collection-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active{
+      background-color: #1b0177;
+      width: 16px;
+    }
+    .prodSwiper {
+      /* overflow: visible; */
+    }
+    @media only screen and (max-width: 890px) {
+      .row-container--{{ section.id }} .slider-title-wrapper {
+        width: 100%;
+      }
+      .row-container--{{ section.id }} .slider_title {
+        font-size: 21px;
+      }
+      .prev-{{ section.id }},
+      .next-{{ section.id }}{
+        display: none;
+      }
+
+    }
+</style>
+<style>
+  .row-container--{{ section.id }} {
+    @media(max-width:768px){
+      padding-top : {{ section.settings.padding_top_mobile }}px;
+      padding-bottom : {{ section.settings.padding_bottom_mobile }}px;
+      margin-top: {{ section.settings.margin_top_mobile }}px;
+      margin-bottom: {{ section.settings.margin_bottom_mobile }}px;
+    }
+    .--category-desktop.desktop-only {
+        display: block;
+        @media(max-width:768px){
+          display: none;
+        }
+    }
+    .--category-image-wrapper {
+        line-height: 0;
+        /* border-radius: 10px; */
+        overflow: hidden;
+        position: relative;
+        a.--category-absolute-link{
+          position: absolute;
+          display: block;
+          top: 0;
+          left:0;
+          width: 100%;
+          height: 100%;
+        }
+        img {
+          width: 100%;
+          height: 100%;
+          aspect-ratio: 1;
+          object-fit: cover;
+          object-position: center center;
+        }
+
+    }
+     a.--category-title {
+          /* border-bottom: 1px solid #000; */
+          width: max-content;
+          margin: 10px auto;
+          text-align: center;
+          text-decoration: none;
+         color: #121212bf;
+      }
+    .--category-mobile.mobile-only {
+        display: none;
+        @media(max-width:768px){
+          display: flex;
+          display: grid;
+          grid-template-columns: repeat(3,1fr);
+          gap: 15px;
+      }
+    }
+    .--slide-{{ section.id }} {
+      text-align: center;
+    }
+
+
+  }
+</style>
+
+<div class="row-container--{{ section.id }} page-width">
+  <div class="slider-title-wrapper">
+    <div class="slider-titles">
+      {% if section.settings.title != blank %}
+        <h1 class="slider_title organna-title">{{ section.settings.title }}</h1>
+      {% endif %}
+    </div>
+  </div>
+  <div class="swiper prodSwiper swiper--{{ section.id }} --category-desktop desktop-only">
+    <div class="swiper-wrapper">
+      {% for block in section.blocks %}
+        <div class="swiper-slide parentSlide slide-{{ section.id }}">
+          <div class="--category-image-wrapper">
+            {{ block.settings.collection.featured_image | image_url: width: 500 | image_tag }}
+            <a href="{{ block.settings.collection.url }}" class="--category-absolute-link"></a>
+          </div>
+          <a href="{{ block.settings.collection.url }}" class="--category-title">
+            {{- block.settings.collection.title -}}
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="swiper-button-prev prev-{{ section.id }}">
+      <svg width="27" height="22" viewBox="0 0 32 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 14L26 14" stroke="#fff" stroke-width="3" stroke-linecap="square"></path>
+        <path d="M17.6514 3L29.6514 14L17.6514 25" stroke="#fff" stroke-width="3" stroke-linecap="square"></path>
+      </svg>
+    </div>
+    <div class="swiper-button-next next-{{ section.id }}">
+      <svg width="27" height="22" viewBox="0 0 32 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 14L26 14" stroke="#fff" stroke-width="3" stroke-linecap="square"></path>
+        <path d="M17.6514 3L29.6514 14L17.6514 25" stroke="#fff" stroke-width="3" stroke-linecap="square"></path>
+      </svg>
+    </div>
+    <div class="feature-collection-pagination"></div>
+  </div>
+
+  <div class="--category-mobile mobile-only">
+    {% for block in section.blocks %}
+      <div class="--swiper-slide --parentSlide --slide-{{ section.id }}">
+        <div class="--category-image-wrapper">
+          {{ block.settings.collection.featured_image | image_url: width: 500 | image_tag }}
+          <a href="{{ block.settings.collection.url }}" class="--category-absolute-link"></a>
+        </div>
+        <a href="{{ block.settings.collection.url }}" class="--category-title">{{ block.settings.collection.title }}</a>
+      </div>
+    {% endfor %}
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+      new Swiper('.swiper--{{ section.id }}', {
+          slidesPerView: 1.5,
+          loop: false,
+          spaceBetween: 20,
+          pagination: {
+            el: '.feature-collection-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.next-{{ section.id }}',
+            prevEl: '.prev-{{ section.id }}',
+          },
+          breakpoints: {
+            100: {
+              slidesPerView: 3,
+              spaceBetween: 20,
+            },
+            768: {
+              slidesPerView: 3,
+              spaceBetween: 25,
+            },
+            1024: {
+              slidesPerView: 6,
+              spaceBetween: 35,
+            },
+          },
+        });
+    });
+  </script>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Collection Slider",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "margin-top",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin-bottom",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Mobile Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top  (Mobile)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom  (Mobile)",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Category",
+      "limit": 6,
+      "settings":[{
+        "type": "collection",
+        "id": "collection",
+        "label": "Category"
+      }],
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Collection Slider"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

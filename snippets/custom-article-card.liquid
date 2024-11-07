@@ -1,0 +1,24 @@
+<div class="article__card">
+  <div class="article__card-media">
+    {% if article.image %}
+      {{ article.image | image_url: width: 1024 | image_tag }}
+    {% endif %}
+    <p>{{ article.tags[0] }}</p>
+  </div>
+  <div class="article__card-texts">
+    {% if article.title != blank %}
+      <h2>{{ article.title | truncate: 40 | escape }}</h2>
+    {% endif %}
+    {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
+      <p>
+        {%- if article.excerpt.size > 0 -%}
+          {{ article.excerpt | strip_html | truncatewords: 25 }}
+        {%- else -%}
+          {{ article.content | strip_html | truncatewords: 25 }}
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+    <a href="{{ article.url | default: "#" }}">Read Article{% render 'gelico-icons', name: 'button-arrow' %}</a>
+  </div>
+  <a href="{{ article.url | default: "#" }}"></a>
+</div>

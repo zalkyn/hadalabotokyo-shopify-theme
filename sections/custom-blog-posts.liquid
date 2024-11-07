@@ -1,0 +1,158 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+
+  @media(max-width: 768px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+  .wrapper-{{ id }}{
+    display: grid;
+    grid-template-columns: minmax(0px,1fr) minmax(0px,1fr) minmax(0px,1fr);
+    grid-column-gap: 25px;
+    grid-row-gap: 34px;
+  }
+
+  @media screen and (max-width: 768px){
+    .wrapper-{{ id }}{
+      grid-template-columns: minmax(0px,1fr) minmax(0px,1fr);
+      grid-column-gap: 1rem;
+      grid-row-gap: 2.5rem;
+    }
+  }
+</style>
+
+{{ 'custom-article-card.css' | asset_url | stylesheet_tag }}
+{%- paginate blog.articles by 6 -%}
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      {% for article in blog.articles %}
+        {% render 'custom-article-card', article: article %}
+      {% endfor %}
+    </div>
+    {%- if paginate.pages > 1 -%}
+      {%- render 'custom-pagination', paginate: paginate -%}
+    {%- endif -%}
+  </div>
+</div>
+{%- endpaginate -%}
+{% schema %}
+  {
+    "name": "Custom Blog Posts",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Full Width Section",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Section Spacing Desktop"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Section Spacing Mobile"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "padding_top_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+      }
+    ],
+    "presets": [
+      {
+        "name": "Custom Blog Posts"
+      }
+    ]
+  }
+{% endschema %}

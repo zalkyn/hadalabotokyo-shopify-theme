@@ -1,0 +1,140 @@
+{% assign id = section.id %}
+<style>
+    #shopify-section-{{ id }} {
+     margin-top: {{ section.settings.margin_top }}px;
+     margin-bottom: {{ section.settings.margin_bottom }}px;
+     padding-top: {{ section.settings.padding_top }}px;
+     padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+
+  @media screen and (max-width: 890px){
+     #shopify-section-{{ id }} {
+       margin-top: {{ section.settings.margin_top-m }}px;
+       margin-bottom: {{ section.settings.margin_bottom-m }}px;
+       padding-top: {{ section.settings.padding_top-m }}px;
+       padding-bottom: {{ section.settings.padding_bottom-m }}px;
+    }
+  }
+</style>
+<section class="{% unless section.settings.full_width %}page-width{% endunless %}">
+  <div class="container-{{ id }}">
+    <div class="heading-{{ id }}">
+      <h2>{{ section.settings.title }}</h2>
+    </div>
+    <div class="wrapper-{{ id }}">
+      {% for obj in shop.metaobjects.product_ingredient_details.values %}
+        <div>{{ obj.title.value }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Ingredient Multicolumn",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "why we created osom"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Spacing (Mobile)"
+    },
+    {
+      "type": "range",
+      "id": "margin_top-m",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom-m",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top-m",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top  (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom-m",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom  (Mobile)",
+      "default": 0
+    }
+  ],
+  "blocks": [],
+  "presets":[
+    {
+      "name": "Ingredient Multicolumn"
+    }
+  ]
+}
+{% endschema %}

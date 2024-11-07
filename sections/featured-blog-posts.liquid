@@ -1,0 +1,374 @@
+{% liquid
+  assign id = section.id
+%}
+
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+
+  @media(max-width: 989px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+  .heading-{{ id }}{
+    color: #000;
+    text-align: center;
+    font-size: 32px;
+    line-height: normal;
+    margin: 0 0 41px;
+  }
+  .blog-post-image{
+    font-size: 0;
+    line-height: 0;
+  }
+  .blog-post-image img, .blog-post-image svg{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .blog-post-texts{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .blog-post-texts h2{
+    color: #000;
+    font-size: 20px;
+    line-height: normal;
+    margin: 0 0 20px;
+  }
+  .blog-post-texts p{
+    color: #000;
+    font-size: 14px;
+    line-height: normal;
+    margin: 0 0 40px;
+  }
+  .blog-post-texts a{
+    color: #000;
+    font-size: 14px;
+    line-height: normal;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .blog-post-texts a svg{
+    width: 4px;
+    height: 8px;
+  }
+  .blog-post-texts a svg path{
+    fill: #000;
+  }
+
+  @media screen and (min-width: 990px){
+   .blog-posts-{{ id }}{
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0px, 1fr));
+      grid-template-rows: repeat(2,minmax(0px, 1fr));
+      grid-column-gap: 20px;
+    }
+    .blog-posts-{{ id }} .other-blog-post-card.blog-post-card:nth-of-type(2){
+      margin: 0 0 20px;
+    }
+    .other-blog-post-card.blog-post-card{
+      grid-column: 2/-1;
+      grid-row: auto;
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+    }
+    .first-blog-post-card.blog-post-card{
+      grid-column: 1/2;
+      grid-row: 1/-1;
+      position: relative;
+    }
+    .first-blog-post-card.blog-post-card .blog-post-image{
+      height: 100%;
+    }
+    .first-blog-post-card.blog-post-card .blog-post-texts{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      max-width: 364px;
+    }
+    .first-blog-post-card.blog-post-card .blog-post-texts{
+      padding: 30px 30px 17px;
+      background: #FFE7EE;
+    }
+    .other-blog-post-card.blog-post-card .blog-post-texts{
+      padding: 20px;
+      background: rgba(234, 9, 75, 0.05);
+    }
+
+  }
+  @media screen and (max-width: 989px){
+    .heading-{{ id }}{
+      font-size: 24px;
+      margin: 0 auto 32px;
+      max-width: 350px;
+    }
+    .blog-posts-{{ id }}{
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      overflow-x: auto;
+      padding-block-end: 35px;
+    }
+
+    
+    .blog-posts-{{ id }}::-webkit-scrollbar-track
+    {
+      -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+      background-color: #F5F5F5;
+      border-radius: 8px;
+    }
+    
+    .blog-posts-{{ id }}::-webkit-scrollbar
+    {
+      background-color: #F5F5F5;
+      height: 3px;
+    }
+    
+    .blog-posts-{{ id }}::-webkit-scrollbar-thumb
+    {
+      background-color: #000000;
+      border-radius: 8px;
+    }
+
+    
+    .blog-post-card{
+      flex: 0 0 350px;
+    }
+    .blog-post-texts{
+      padding: 24px;
+      background: rgba(234, 9, 75, 0.05);
+      height: calc(100% - 197px);
+    }
+    .blog-post-texts h2{
+      font-size: 18px;
+      margin: 0 0 15px;
+    }
+    .blog-post-texts p{
+      font-size: 14px;
+      margin: 0 0 30px;
+    }
+    .blog-post-texts a{
+      font-size: 14px;
+      gap: 8px;
+    }
+    
+  }
+</style>
+
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      {% if section.settings.heading != blank %}
+        <h2 class="heading-{{ id }}">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.blog != blank and section.settings.blog.articles_count > 0 %}
+        <div class="blog-posts-{{ id }}">
+          {% for article in section.settings.blog.articles limit: 3 %}
+            
+            {%- assign placeholder_image_index = forloop.index0 | modulo: 3 | plus: 1 -%}
+            {%- assign placeholder_image = 'blog-apparel-' | append: placeholder_image_index -%}
+            
+            <div class="blog-post-card {% if forloop.first %}first-blog-post-card{% else %}other-blog-post-card{% endif %}">
+              <div class="blog-post-image">
+                {% if article.image %}
+                  {{ article.image | image_url: width: 750 | image_tag: loading: 'lazy' }}
+                {% else %}
+                  {{ placeholder_image | placeholder_svg_tag: 'blog-placeholder-svg' }}
+                {% endif %}
+              </div>
+              <div class="blog-post-texts">
+                <h2>
+                  {% if article.title != blank %}
+                    {{ article.title }}
+                  {% else %}
+                    {{ 'sections.featured_blog.onboarding_title' | t }}
+                  {% endif %}
+                </h2>
+                <p>
+                  {% if article.excerpt != blank or article.content != blank %}
+                    {%- if article.excerpt.size > 0 -%}
+                      {{ article.excerpt | strip_html | truncatewords: 20 }}
+                    {%- else -%}
+                      {{ article.content | strip_html | truncatewords: 20 }}
+                    {%- endif -%}
+                  {% else %}
+                    {{ 'sections.featured_blog.onboarding_content' | t }}
+                  {% endif %}
+                </p>
+                <a href="{{ article.url | default: "#" }}">Read Article{% render 'gelico-icons', name: 'button-arrow' %}</a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  
+  window.onload = () => {
+    const adjustScrollbar = () => {
+      const screenWidth = window.innerWidth || document.documentElement.clientWidth;
+      if (screenWidth < 989) {
+        const images = document.querySelectorAll('.blog-post-image img, .blog-post-image svg');
+        const tallestHeight = Array.from(images).reduce((acc, image) => {
+            const height = image.offsetHeight;
+            return height > acc ? height : acc;
+        }, 0);
+
+        images.forEach(image => {
+            image.style.height = `${tallestHeight}px`;
+        });
+      }
+    };
+    adjustScrollbar();
+    window.addEventListener('resize', adjustScrollbar);
+  };
+
+</script>
+{% schema %}
+  {
+    "name": "Featured Blog Posts",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Full Width Section",
+        "default": true
+      },
+      {
+        "type": "textarea",
+        "id": "heading",
+        "label": "heading",
+        "default": "Discover the Secret to Perfect Skin"
+      },
+      {
+        "type": "blog",
+        "id": "blog",
+        "label": "Blog"
+      },
+      {
+        "type": "header",
+        "content": "Section Spacing Desktop"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Section Spacing Mobile"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "padding_top_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "text",
+        "settings": [
+          {
+            "type": "text",
+            "id": "text",
+            "label": "text"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Featured Blog Posts"
+      }
+    ]
+  }
+{% endschema %}

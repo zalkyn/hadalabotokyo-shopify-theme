@@ -1,0 +1,87 @@
+{% comment %}
+  Image Lazy Load
+  @isLazyLoad [boolean]
+
+  Product review
+  @showReview [boolean]
+
+  Card badge
+  @showBadge [boolean]
+
+  render 'new-product-card', product: product, isLazyLoad: isLazyLoad, showReview: showReview, showBadge: showBadge
+{% endcomment %}
+
+<div
+  class="new-product-card {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+  {% if settings.animations_reveal_on_scroll %}
+    data-cascade
+    style="--animation-order: {{ forloop.index }};"
+  {% endif %}
+>
+  <div class="new-product-media">
+    {% unless product.featured_image == blank %}
+      {% if isLazyLoad %}
+        {{ product.featured_image | image_url: width: 500 | image_tag: loading: 'lazy' }}
+      {% else %}
+        {{ product.featured_image | image_url: width: 450 | image_tag }}
+      {% endif %}
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag }}
+    {% endunless %}
+    {% if showBadge %}
+      {% if product.tags contains 'popular' %}
+        <div class="product-card-badge">
+          <button>Most Popular</button>
+        </div>
+      {% endif %}
+    {% endif %}
+    <a class="goto-prod-url" href="{{ product.url }}" aria-label="Read more about {{ product.title }}"></a>
+  </div>
+  <div class="new-product-info">
+    <div class="new-product-info-top">
+      <a href="{{ product.url }}" class="new-product-title" aria-label="Read more about {{ product.title }}">
+        {{- product.title -}}
+      </a>
+    </div>
+    <div class="new-product-info-bottom">
+      {% if showReview %}
+        <div class="new-product-card-review">
+          <div class="jdgm-widget jdgm-preview-badge">
+            {{ product.metafields.judgeme.badge }}
+          </div>
+        </div>
+      {% endif %}
+      {% if product.has_only_default_variant %}
+        {% form 'product', product, class: 'new-product-card-form' %}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <button
+            title="Add To Cart - {{ product.title }}-{{ product.selected_or_first_available_variant.price | money }}"
+            aria-label="Add to Cart"
+            type="submit"
+            class="new-product-add-to-card product-quick-add"
+            {% unless product.selected_or_first_available_variant.available %}
+              disabled
+            {% endunless %}
+          >
+            {% if product.selected_or_first_available_variant.available %}
+              ADD TO BAG-<span>{{ cart.currency.symbol }}</span>
+              {{- product.selected_or_first_available_variant.price | money_without_currency }}
+            {% else %}
+              SOLD OUT-<span>{{ cart.currency.symbol }}</span>
+              {{- product.selected_or_first_available_variant.price | money_without_currency }}
+            {% endif %}
+          </button>
+        {% endform %}
+      {% else %}
+        <a
+          class="new-product-add-to-card"
+          href="{{ product.url }}"
+          aria-label="Read more about {{ product.title }}"
+          >SELECT SHADE-<span>{{ cart.currency.symbol }}</span>
+          {{- product.selected_or_first_available_variant.price | money_without_currency -}}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
